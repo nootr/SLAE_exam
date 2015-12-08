@@ -1,4 +1,4 @@
-; Filename    : tcp_reverse_shell.asm
+; Filename    : shell_reverse_tcp.asm
 ; Author      : Joris Hartog
 ; Date        : 30-11-2015
 ; Student     : SLAE-704
