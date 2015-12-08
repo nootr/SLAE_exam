@@ -1,11 +1,11 @@
-; Filename    : tcp_bind_shell.asm
+; Filename    : shell_bind_tcp.asm
 ; Author      : Joris Hartog
 ; Date        : 30-11-2015
 ; Student     : SLAE-704
 ; Size        : 
-; Description : This program binds to a port, redirects 
-;  STDIN, STDOUT and STDERR to that port and then executes
-;  /bin/sh.
+; Description : This program binds to a port, waits for a
+; connection, redirects STDIN, STDOUT and STDERR to that 
+; port and then executes /bin/sh.
 
 global _start
 
