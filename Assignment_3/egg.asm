@@ -18,7 +18,7 @@ section .text
 
 _start:
 	
-	; This is the actual egg
+	; This is the actual egg signature
 	push eax
 	pop eax
 	push eax
