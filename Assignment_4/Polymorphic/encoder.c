@@ -215,7 +215,7 @@ int main(int argc, char *argv[]) {
         printf("                     18-12-2015                        \n");
         printf("                  by Joris Hartog                      \n\n");
 
-	char shellcode[256];
+	char shellcode[1024];
 
 	// Check if number of arguments is correct
 	if(argc != 2) {
