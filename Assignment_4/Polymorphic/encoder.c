@@ -216,7 +216,7 @@ int main(int argc, char *argv[]) {
 
 	// Clear the screen and print unnecessary header
 	system("clear");
-	printf("	.__                                            \n");
+	printf(".__                                                    \n");
 	printf("[__) _ |  .._ _  _ ._.._ |_ * _.   _ ._  _. _  _| _ ._.\n");
 	printf("|   (_)|\\_|[ | )(_)[  [_)[ )|(_.  (/,[ )(_.(_)(_](/,[  \n");
 	printf("        ._|           |                                \n\n");
