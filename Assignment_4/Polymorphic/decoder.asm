@@ -2,7 +2,6 @@
 ; Author      : Joris Hartog
 ; Date        : 17-12-2015
 ; Student     : SLAE-704
-; Size        : 25 (code) + 44 (decoder) = 69
 ; Description : This program decodes the shellcode by XOR'ing each encoded byte
 ;  with the previous encoded byte. The first encoded byte gets XOR'd with a key. 
 
