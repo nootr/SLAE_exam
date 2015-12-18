@@ -85,7 +85,7 @@ char* appendString(char str1[], char str2[]) {
 char* polymorphicDecoder(char key, int codeLength) {
 	char decoderParts[19][10] = 
 	{
-		"\xeb\x1e",
+		"\xeb\x1f",
 		"\x90",
 		"\x5e",
 		"\x31\xc0",
@@ -146,12 +146,12 @@ char* polymorphicDecoder(char key, int codeLength) {
 		decoderParts[15][1] += 2;
 	}
 	if (0b00100000 & key) {
-		strcpy(decoderParts[14], "\x2e\xf7");
-		decoderParts[14][1] = decoderParts[15][1];
+		strcpy(decoderParts[14], "\xe2\xf7");
+		decoderParts[14][1] = decoderParts[15][1] + 1;
 		decoderParts[15][0] = '\0';
 
-		decoderParts[0][1] -= 2;
-		decoderParts[18][1] += 2;
+		decoderParts[0][1] -= 1;
+		decoderParts[18][1] += 1;
 	}
 	if (0b01000000 & key) {
 		decoderParts[1][0] = '\0';
@@ -160,10 +160,10 @@ char* polymorphicDecoder(char key, int codeLength) {
 		decoderParts[18][1] += 1;
 	}
 	if (0b10000000 & key) {
-		strcpy(decoderParts[16], "\xeb\x05");
 		decoderParts[17][0] = '\0';
 
 		decoderParts[0][1] -= 1;
+		decoderParts[16][1] -= 1;
 		decoderParts[18][1] += 1;
 	}
 
