@@ -214,6 +214,15 @@ int main(int argc, char *argv[]) {
 		return 0;
 	}
 
+	// Clear the screen and print unnecessary header
+	system("clear");
+	printf("	.__                                            \n");
+	printf("[__) _ |  .._ _  _ ._.._ |_ * _.   _ ._  _. _  _| _ ._.\n");
+	printf("|   (_)|\\_|[ | )(_)[  [_)[ )|(_.  (/,[ )(_.(_)(_](/,[  \n");
+	printf("        ._|           |                                \n\n");
+	printf("                     18-12-2015                        \n");
+	printf("                  by Joris Hartog                      \n\n");
+
 	// Import the shellcode
 	printf("[*] Importing shellcode..\n");
 	char shellcode[256];
@@ -300,7 +309,14 @@ int main(int argc, char *argv[]) {
 
 	system("gcc -fno-stack-protector -z execstack -o execute execute.c\n");
 
-	printf("[*] Done! Exiting..\n");
+	printf("[*] Done! Execute file?\n[?] (y/n) ");
+	char c;
+	scanf(" %c", &c);
+
+	if ( (c == 'y') || (c == 'Y') )
+		system("./execute");
+
+	printf("[*] Exiting..\n");
 	return 0;
 }
 
