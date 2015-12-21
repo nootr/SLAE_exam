@@ -64,9 +64,6 @@ int main(int argc, char *argv[])
   printf("checksum :  0x%04x\n", crc16(buffer, buffer_len));
   encrypt(buffer, buffer_len, IV, key, keysize); 
   printf("cipher   :  "); display(buffer, buffer_len);
-
-  unsigned short keysum = crc16(key, 16);
-  printf("keysum   :  0x%04x\n", keysum);
   
   return 0;
 }
