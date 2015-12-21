@@ -44,7 +44,7 @@ int main(int argc, char *argv[])
 {
   MCRYPT td, td2;
   char* IV   = "AAAAAAAAAAAAAAAA";
-  char key[] = "13370000";
+  char key[] = "13298765";
   int keysize = 8; /* 128 bits */
   char* buffer;
   int buffer_len = 32;
